@@ -5,8 +5,8 @@ pub enum Clock {
     PortC,
 }
 
-#[repr(align(512))]
-struct Pad512(u8);
+// Represents a 32-bit unsigned int
+struct DWORD(u32);
 
 #[repr(C, packed)]
 pub struct Sim {
@@ -17,18 +17,18 @@ pub struct Sim {
     // they are not continous, how do we resolve that ? Padding, eh ?
     sopt1: u32,
     sopt1cfg: u32,
-    // Add 0xFFC bytes padding
-    _pad0: [u8; 0xFFC],
+    // Add 0x3FF DWORD padding
+    _pad0: [DWORD; 0x3FF],
     sopt2: u32,
-    // Add 0x4 bytes padding
-    _pad1: [u8; 0x004],
+    // Add 0x001 DWORD padding
+    _pad1: [DWORD; 0x001],
     sopt4: u32,
     sopt5: u32,
-    // Add 0x004 bytes padding
-    _pad2: [u8; 0x004],
+    // Add 0x001 DWORD padding
+    _pad2: [DWORD; 0x001],
     sopt7: u32,
-    // Add 0x008 bytes padding
-    _pad3: [u8; 0x008],
+    // Add 0x002 DWORD padding
+    _pad3: [DWORD; 0x002],
     sdid: u32,
     scgc1: u32,
     scgc2: u32,
