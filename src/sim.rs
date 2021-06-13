@@ -5,6 +5,9 @@ pub enum Clock {
     PortC,
 }
 
+#[repr(align(512))]
+struct Pad512(u8);
+
 #[repr(C, packed)]
 pub struct Sim {
     // Complete code here
@@ -12,12 +15,43 @@ pub struct Sim {
     // and memory locations and do similar to the watchdog struct.
     // Note that there are some empty bits between some registers and
     // they are not continous, how do we resolve that ? Padding, eh ?
+    sopt1: u32,
+    sopt1cfg: u32,
+    // Add 0xFFC bytes padding
+    _pad0: [u8; 0xFFC],
+    sopt2: u32,
+    // Add 0x4 bytes padding
+    _pad1: [u8; 0x004],
+    sopt4: u32,
+    sopt5: u32,
+    // Add 0x004 bytes padding
+    _pad2: [u8; 0x004],
+    sopt7: u32,
+    // Add 0x008 bytes padding
+    _pad3: [u8; 0x008],
+    sdid: u32,
+    scgc1: u32,
+    scgc2: u32,
+    scgc3: u32,
+    scgc4: u32,
+    scgc5: u32,
+    scgc6: u32,
+    scgc7: u32,
+    clkdiv1: u32,
+    clkdiv2: u32,
+    fcfg1: u32,
+    fcfg2: u32,
+    uidh: u32,
+    uidmh: u32,
+    uidml: u32,
+    uidl: u32,
 }
 
 impl Sim {
     pub unsafe fn new() -> &'static mut Sim {
         // Complete code here (similar to watchdog),
         // see memory location from section 12.2
+        &mut *(0x40047000 as *mut Sim)
     }
 
     pub fn enable_clock(&mut self, clock: Clock) {
