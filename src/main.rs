@@ -10,8 +10,15 @@ mod port;
 mod sim;
 mod watchdog;
 
+use watchdog::Watchdog;
+
 pub extern "C" fn main() {
-    // Complete main function here
+    // Disable watchdog timer
+    let watchdog = unsafe {
+        Watchdog::new()
+    };
+    watchdog.disable();
+
     loop {}
 }
 
