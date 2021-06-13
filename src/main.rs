@@ -14,9 +14,7 @@ use watchdog::Watchdog;
 
 pub extern "C" fn main() {
     // Disable watchdog timer
-    let watchdog = unsafe {
-        Watchdog::new()
-    };
+    let watchdog = unsafe { Watchdog::new() };
     watchdog.disable();
 
     loop {}

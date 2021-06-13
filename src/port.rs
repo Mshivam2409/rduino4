@@ -8,9 +8,9 @@ pub enum PortName {
 #[repr(C, packed)]
 pub struct Port {
     // Complete the struct below. See section 11.1.4 of the manual.
-    // Note it has continous memory representation of multiple ports
-    // but struct should only account for port C i.e. all registers
-    // beginning with PORTC_.
+// Note it has continous memory representation of multiple ports
+// but struct should only account for port C i.e. all registers
+// beginning with PORTC_.
 }
 
 impl Port {
@@ -47,7 +47,7 @@ struct GpioBitBand {
 
 pub struct Gpio {
     gpio: *mut GpioBitband,
-    pin: usize
+    pin: usize,
 }
 
 impl Port {
@@ -72,9 +72,9 @@ impl Pin {
 }
 
 impl Gpio {
-    pub unsafe fn new(port: PortName, pin: usize) -> Gpio {-++++
+    pub unsafe fn new(port: PortName, pin: usize) -> Gpio {
         let gpio = match port {
-            PortName::C => 0x43FE1000 as *mut GpioBitband
+            PortName::C => 0x43FE1000 as *mut GpioBitband,
         };
 
         // Initialize and return a gpio struct.
@@ -89,9 +89,9 @@ impl Gpio {
 
     pub fn high(&mut self) {
         unsafe {
-           // WRITE THE  XX register of GPIO to 1 to set this pin as high.
-           // See section 49.2 of the teensy manual to find out what is XX.
-           // Please not that it is not PDOR, since PDOR is never directly written.
+            // WRITE THE  XX register of GPIO to 1 to set this pin as high.
+            // See section 49.2 of the teensy manual to find out what is XX.
+            // Please not that it is not PDOR, since PDOR is never directly written.
         }
     }
 }
