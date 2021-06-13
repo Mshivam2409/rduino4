@@ -5,6 +5,17 @@ use core::arch::arm::__nop;
 pub struct Watchdog {
     stctrlh: u16,
     stctrll: u16,
+    tovalh: u16,
+    tovall: u16,
+    winh: u16,
+    winl: u16,
+    refresh: u16,
+    unlock: u16,
+    tmrouth: u16,
+    tmroutl: u16,
+    rstcnt: u16,
+    presc:u16
+    
     // Complete the rest of the registers here using section 23.7 of the manual.
 }
 
