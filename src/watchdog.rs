@@ -31,12 +31,10 @@ impl Watchdog {
             // 2 cycle delay for every unlock
             __nop();
             __nop();
-            // reading into the Watdog Status and Control Register High
-            let mut ctrl = core::ptr::read_volatile(&self.stctrlh);
-            // changing the 0th bit
-            ctrl &= !(0x00000001);
-            // writing into the register
-            core::ptr::write_volatile(&mut self.stctrlh, ctrl);
+            let mut ctrl = core::ptr::read_volatile(&self.stctrlh);// reading into the Watdog Status and Control Register High
+            ctrl &= !(0x00000001); // changing the 0th bit 
+            core::ptr::write_volatile(&mut self.stctrlh, ctrl);// writing into the register
+        
         }
     }
 }
