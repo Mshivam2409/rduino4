@@ -36,13 +36,18 @@ pub struct Pin {
 
 impl Port {
     pub unsafe fn pin(&mut self, p: usize) -> Pin {
-        // Complete and return a pin struct
+        Pin { port: self, pin: p } // Complete and return a pin struct
     }
 }
 
 #[repr(C, packed)]
 struct GpioBitBand {
-    // Complete using section 49.2
+    pdor: [u32; 32],
+    psor: [u32; 32],
+    pcor: [u32; 32],
+    ptor: [u32; 32],
+    pdir: [u32; 32],
+    pddr: [u32; 32], // Complete using section 49.2
 }
 
 pub struct Gpio {
