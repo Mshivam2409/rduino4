@@ -37,7 +37,6 @@ impl Watchdog {
             ctrl &= !(0x00000001);
             // writing into the register
             core::ptr::write_volatile(&mut self.stctrlh, ctrl);
-
         }
     }
 }
