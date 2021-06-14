@@ -107,6 +107,10 @@ impl Gpio {
         };
 
         // Initialize and return a gpio struct.
+        Gpio {
+            gpio,
+            pin,
+        }
     }
 
     pub fn output(&mut self) {
