@@ -56,7 +56,7 @@ struct GpioBitBand {
 }
 
 pub struct Gpio {
-    gpio: *mut GpioBitband,
+    gpio: *mut GpioBitBand,
     pin: usize,
 }
 
@@ -88,7 +88,7 @@ impl Pin {
 impl Gpio {
     pub unsafe fn new(port: PortName, pin: usize) -> Gpio {
         let gpio = match port {
-            PortName::C => 0x43FE1000 as *mut GpioBitband,
+            PortName::C => 0x43FE1000 as *mut GpioBitBand,
         };
 
         Gpio { gpio,pin}                     // struct Gpio initialization.
