@@ -26,7 +26,7 @@ impl Port {
     }
 
     pub unsafe fn set_pin_mode(&mut self, p: usize, mut mode: u32) {
-        // Given the pin mode as a 32 bit value set the register bytes
+       let mut pcr  // Given the pin mode as a 32 bit value set the register bytes
         // to the same value for the corresponding pin. See the MUX(10-8)
         // bits in section 11.14.1. We need to set only those bits.
         // Again think of appropriate operations using AND,OR,XOR etc..
@@ -74,9 +74,10 @@ impl Port {
 impl Pin {
     pub fn make_gpio(self) -> Gpio {
         unsafe {
-            // Set pin mode to 1 to enable gpio mode (section 11.14.1 MUX bits).
-            // Consume the pin into a gpio struct i.e. instantitate a gpio
-            // struct using the new function below.
+            let port=&mut *self.port;
+            port.set_pin_mode(self.pin,1);// Set pin mode to 1 to enable gpio mode (section 11.14.1 MUX bits).
+                                            // Consume the pin into a gpio struct i.e. instantitate a gpio
+                                              // struct using the new function below.
         }
     }
 }
@@ -87,7 +88,7 @@ impl Gpio {
             PortName::C => 0x43FE1000 as *mut GpioBitband,
         };
 
-        // Initialize and return a gpio struct.
+        Gpio { gpio,pin}                     // struct Gpio initialization.
     }
 
     pub fn output(&mut self) {
