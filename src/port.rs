@@ -25,7 +25,7 @@ impl Port {
         // See the address in section 11.1.4.
     }
 
-    pub unsafe fn set_pin_mode(&mut self, p: usize, mut mode: u32) {
+    pub unsafe fn set_pin_mode(&mut self, p: usize, mode: u32) {
         // Given the pin mode as a 32 bit value set the register bytes
         // to the same value for the corresponding pin. See the MUX(10-8)
         // bits in section 11.14.1. We need to set only those bits.
