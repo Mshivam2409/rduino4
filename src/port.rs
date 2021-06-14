@@ -7,6 +7,12 @@ pub enum PortName {
 
 #[repr(C, packed)]
 pub struct Port {
+    // Array to store the 32 Pin Control Registers
+    pcr: [u32; 32],
+    gpclr: u32,
+    gpchr: u32,
+    isfr: u32,
+
     // Complete the struct below. See section 11.1.4 of the manual.
 // Note it has continous memory representation of multiple ports
 // but struct should only account for port C i.e. all registers
@@ -15,6 +21,10 @@ pub struct Port {
 
 impl Port {
     pub unsafe fn new(name: PortName) -> &'static mut Port {
+        // the matchcase resturns the address only when portname is C
+        &mut * match name {
+            PortName::C => 0x4004B000 as *mut Port
+        }
         // Complete the function below. Similar to watchdog. But use
         // a matchcase since we should only return when portname is C.
         // See the address in section 11.1.4.
