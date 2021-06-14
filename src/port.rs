@@ -81,6 +81,12 @@ impl Pin {
             // Set pin mode to 1 to enable gpio mode (section 11.14.1 MUX bits).
             // Consume the pin into a gpio struct i.e. instantitate a gpio
             // struct using the new function below.
+=======
+            let port=&mut *self.port;
+            port.set_pin_mode(self.pin,1);// Set pin mode to 1 to enable gpio mode (section 11.14.1 MUX bits).
+                                            // Consume the pin into a gpio struct i.e. instantitate a gpio
+                                              // struct using the new function below.
+>>>>>>> 5aa7456b2883c5d9a244f0ed3ef557b51af3cf3c
         }
     }
 }
