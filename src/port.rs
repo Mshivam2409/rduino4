@@ -1,4 +1,4 @@
-use core;
+use core::{self, u8};
 
 #[derive(Clone, Copy)]
 pub enum PortName {
@@ -31,6 +31,22 @@ impl Port {
         // bits in section 11.14.1. We need to set only those bits.
         // Again think of appropriate operations using AND,OR,XOR etc..
         // There are only 8 possible pin models so mode = 0 to 7. Reject if different.
+        if mode > u8::MAX as u32 {
+            return;
+        }
+
+        // Get the value of pcr
+        let pcr = core::ptr::addr_of_mut!(self.pcr[p]);
+        let mut pcr_val = core::ptr::read_volatile(pcr);
+
+        // Clear bits 8-10
+        pcr_val &= !(0x7 << 8);
+        // Set bits 8-10 to value specified in mode
+        pcr_val |= mode << 8;
+
+
+        // Write pcr_val to register
+        core::ptr::write_volatile(pcr, pcr_val);
     }
 }
 
