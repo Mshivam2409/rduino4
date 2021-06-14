@@ -17,8 +17,8 @@ pub struct Port {
 impl Port {
     pub unsafe fn new(name: PortName) -> &'static mut Port {
         // the matchcase resturns the address only when portname is C
-        &mut * match name {
-            PortName::C => 0x4004B000 as *mut Port
+        &mut *match name {
+            PortName::C => 0x4004B000 as *mut Port,
         }
         // Complete the function below. Similar to watchdog. But use
         // a matchcase since we should only return when portname is C.
@@ -43,7 +43,6 @@ impl Port {
         pcr_val &= !(0x7 << 8);
         // Set bits 8-10 to value specified in mode
         pcr_val |= mode << 8;
-
 
         // Write pcr_val to register
         core::ptr::write_volatile(pcr, pcr_val);
@@ -107,10 +106,7 @@ impl Gpio {
         };
 
         // Initialize and return a gpio struct.
-        Gpio {
-            gpio,
-            pin,
-        }
+        Gpio { gpio, pin }
     }
 
     pub fn output(&mut self) {

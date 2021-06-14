@@ -60,8 +60,8 @@ impl Sim {
                 Clock::PortC => {
                     // Get address of scgc5
                     let scgc5 = core::ptr::addr_of_mut!(self.scgc5);
-                    //scgc5 register controls Port C 
-                    let mut scgc = core::ptr::read_volatile(scgc5); 
+                    //scgc5 register controls Port C
+                    let mut scgc = core::ptr::read_volatile(scgc5);
                     //Setting the 11th bit to 1
                     scgc |= 0x00000800;
                     // Writing into scgc5
