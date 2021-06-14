@@ -82,6 +82,8 @@ impl Port {
             // Return PortName::C if the address matches the starting
             // address of port C as specified in section 11.1.4. Reject
             // if address is wrong and return error.
+            0x4004_B000 => PortName::C,
+            _ => unreachable!(),
         }
     }
 }
