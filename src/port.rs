@@ -67,7 +67,7 @@ struct GpioBitBand {
     pcor: [u32; 32],
     ptor: [u32; 32],
     pdir: [u32; 32],
-    pddr: [u32; 32], // Complete using section 49.2
+    pddr: [u32; 32] // Complete using section 49.2
 }
 
 pub struct Gpio {
@@ -82,7 +82,7 @@ impl Port {
             // Return PortName::C if the address matches the starting
             // address of port C as specified in section 11.1.4. Reject
             // if address is wrong and return error.
-            0x4004_B000 => PortName::C,
+            0x4004B000 => PortName::C,
             _ => unreachable!(),
         }
     }
@@ -113,6 +113,8 @@ impl Gpio {
 
     pub fn output(&mut self) {
         unsafe {
+            // The PDDR configures the individual port pins for input or output.
+            core::ptr::write_volatile(&mut (*self.gpio).pddr[self.pin], 1);
             // WRITE THE  XX register of GPIO to 1 to enable this pin as output type.
             // See section 49.2 of the teensy manual to find out what is XX.
         }
@@ -120,6 +122,8 @@ impl Gpio {
 
     pub fn high(&mut self) {
         unsafe {
+            //PSOR configures whether to set the fields of the PDOR.
+            core::ptr::write_volatile(&mut (*self.gpio).psor[self.pin], 1);
             // WRITE THE  XX register of GPIO to 1 to set this pin as high.
             // See section 49.2 of the teensy manual to find out what is XX.
             // Please not that it is not PDOR, since PDOR is never directly written.
