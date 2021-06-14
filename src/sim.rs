@@ -64,6 +64,9 @@ impl Sim {
                     // which bit of which register needs to be changed to
                     // enable clock gate to Port C. Note that all other
                     // bits of that register must remain unchanged.
+                    self.scgc5.update(|scgc|) {
+                        scgc.set_bit(11,true);
+                    });
                 }
             }
         }
