@@ -26,17 +26,22 @@ impl Watchdog {
     pub fn disable(&mut self) {
         unsafe {
             // access volatile object  and unlocking the watchdog for modification
-            core::ptr::write_volatile(&mut self.unlock, 0xC520);
-            core::ptr::write_volatile(&mut self.unlock, 0xD928);
+            let unlock_mut = core::ptr::addr_of_mut!(self.unlock);
+            core::ptr::write_volatile(unlock_mut, 0xC520);
+            core::ptr::write_volatile(unlock_mut, 0xD928);
+
             // 2 cycle delay for every unlock
             __nop();
             __nop();
+
             // reading into the Wathdog Status and Control Register High
-            let mut ctrl = core::ptr::read_volatile(&self.stctrlh);
+            let stctrlh = core::ptr::addr_of_mut!(self.stctrlh);
+            let mut ctrl = core::ptr::read_volatile(stctrlh);
+
             // changing the 0th bit
             ctrl &= !(0x00000001);
             // writing into the register
-            core::ptr::write_volatile(&mut self.stctrlh, ctrl);
+            core::ptr::write_volatile(stctrlh, ctrl);
         }
     }
 }
