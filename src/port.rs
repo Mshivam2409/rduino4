@@ -74,6 +74,9 @@ impl Port {
 impl Pin {
     pub fn make_gpio(self) -> Gpio {
         unsafe {
+            let port = &mut *self.port;
+            port.set_pin_mode(self.pin, 1);
+            Gpio::new(port.name(), self.pin)
             // Set pin mode to 1 to enable gpio mode (section 11.14.1 MUX bits).
             // Consume the pin into a gpio struct i.e. instantitate a gpio
             // struct using the new function below.
