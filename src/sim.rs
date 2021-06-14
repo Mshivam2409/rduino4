@@ -58,6 +58,13 @@ impl Sim {
         unsafe {
             match clock {
                 Clock::PortC => {
+                    //scgc5 register controls Port C 
+                    let mut scgc = core::ptr::read_volatile(&self.scgc5); 
+                    //Setting the 11th bit to 1
+                    scgc |= 0x00000800;
+                    // Writing into scgc5
+                    core::ptr::write_volatile(&mut self.scgc5, scgc);
+
                     // Use the teensy manual to find out which register
                     // controls Port C. Then implement this function to
                     // enable port C. Scroll through section 12.2 to find
