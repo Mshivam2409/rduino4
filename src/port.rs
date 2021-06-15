@@ -1,4 +1,4 @@
-use core::{self, u8};
+use core::{self, ptr::addr_of_mut, u8};
 
 #[derive(Clone, Copy)]
 pub enum PortName {
@@ -16,7 +16,7 @@ pub struct Port {
 
 impl Port {
     pub unsafe fn new(name: PortName) -> &'static mut Port {
-        // the matchcase resturns the address only when portname is C
+        // the matchcase returns the address only when portname is C
         &mut *match name {
             PortName::C => 0x4004B000 as *mut Port,
         }
@@ -67,7 +67,7 @@ struct GpioBitBand {
     pcor: [u32; 32],
     ptor: [u32; 32],
     pdir: [u32; 32],
-    pddr: [u32; 32] // Complete using section 49.2
+    pddr: [u32; 32], // Complete using section 49.2
 }
 
 pub struct Gpio {
@@ -91,12 +91,12 @@ impl Port {
 impl Pin {
     pub fn make_gpio(self) -> Gpio {
         unsafe {
-            let port = &mut *self.port;
-            port.set_pin_mode(self.pin, 1);
-            Gpio::new(port.name(), self.pin)
             // Set pin mode to 1 to enable gpio mode (section 11.14.1 MUX bits).
             // Consume the pin into a gpio struct i.e. instantitate a gpio
             // struct using the new function below.
+            let port = &mut *self.port;
+            port.set_pin_mode(self.pin, 1);
+            Gpio::new(port.name(), self.pin)
         }
     }
 }
@@ -114,19 +114,27 @@ impl Gpio {
     pub fn output(&mut self) {
         unsafe {
             // The PDDR configures the individual port pins for input or output.
-            core::ptr::write_volatile(&mut (*self.gpio).pddr[self.pin], 1);
             // WRITE THE  XX register of GPIO to 1 to enable this pin as output type.
             // See section 49.2 of the teensy manual to find out what is XX.
+            // Get the address of PDDR
+            let pddr = addr_of_mut!((*self.gpio).pddr[self.pin]);
+
+            // Write
+            core::ptr::write_volatile(pddr, 1);
         }
     }
 
     pub fn high(&mut self) {
         unsafe {
             //PSOR configures whether to set the fields of the PDOR.
-            core::ptr::write_volatile(&mut (*self.gpio).psor[self.pin], 1);
             // WRITE THE  XX register of GPIO to 1 to set this pin as high.
             // See section 49.2 of the teensy manual to find out what is XX.
             // Please not that it is not PDOR, since PDOR is never directly written.
+            // Get the address of PSOR
+            let psor = addr_of_mut!((*self.gpio).psor[self.pin]);
+
+            // Write
+            core::ptr::write_volatile(psor, 1);
         }
     }
 }
