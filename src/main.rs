@@ -31,9 +31,9 @@ pub static _VECTORS: [unsafe extern "C" fn(); 2] = [_stack_top, main];
 #[no_mangle]
 // Complete the code below
 
-pub static _FLASHCONFIG: [u8; 16] = {
+pub static _FLASHCONFIG: [u8; 16] = [
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xDE, 0xF9, 0xFF, 0xFF, 
-};
+];
 
 #[panic_handler]
 fn teensy_panic(_pi: &core::panic::PanicInfo) -> ! {
