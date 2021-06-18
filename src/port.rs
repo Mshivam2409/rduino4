@@ -1,4 +1,8 @@
-use core::{self, ptr::addr_of_mut, u8};
+use core::{
+    self,
+    ptr::addr_of_mut,
+    u8,
+};
 
 #[derive(Clone, Copy)]
 pub enum PortName {
@@ -111,6 +115,7 @@ impl Gpio {
         Gpio { gpio, pin }
     }
 
+    // Sets GPIO to output
     pub fn output(&mut self) {
         unsafe {
             // The PDDR configures the individual port pins for input or output.
@@ -124,6 +129,7 @@ impl Gpio {
         }
     }
 
+    // Sets GPIO to high
     pub fn high(&mut self) {
         unsafe {
             //PSOR configures whether to set the fields of the PDOR.
@@ -135,6 +141,17 @@ impl Gpio {
 
             // Write
             core::ptr::write_volatile(psor, 1);
+        }
+    }
+
+    // Sets GPIO to low
+    pub fn low(&mut self) {
+        unsafe {
+            // Get address of register
+            let psor_mut = addr_of_mut!((*self.gpio).psor[self.pin]);
+
+            // Write 0x0 byte to set the pin to low
+            core::ptr::write_volatile(psor_mut, 0x0);
         }
     }
 }

@@ -15,19 +15,31 @@ use sim::Sim;
 use watchdog::Watchdog;
 
 pub extern "C" fn main() {
-    // Disable watchdog timer
-    //let(dogw,sim,pin)= unsafe { (Watchdog::new(),Sim::new(),) }.disable();
+    // Create watchdog
     let dogw = unsafe { Watchdog::new() };
+    // Create sim
     let sim = unsafe { Sim::new() };
+    // Grab pin 5 from port
     let pin = unsafe { Port::new(port::PortName::C).pin(5) };
 
+    // Disable watchdog timer
     dogw.disable();
+    // Enable clock gating for port C
     sim.enable_clock(sim::Clock::PortC);
+    // Make the pin 5 GPIO
     let mut gpio = pin.make_gpio();
-    gpio.output();
-    gpio.high();
 
-    loop {}
+    // Set GPIO as output
+    gpio.output();
+
+    // Blink the LED periodically
+    loop {
+        // Turn on the LED
+        gpio.high();
+
+        // Turn off the LED
+        gpio.low();
+    }
 }
 
 extern "C" {
