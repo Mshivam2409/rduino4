@@ -14,7 +14,15 @@ namespace core
 
     void write_volatile(size_t value, size_t address, RAM ram)
     {
-        ram.memory[address] = value;
+        try
+        {
+            ram.memory[address] = value;
+            std::cout << value << " written at address " << address << std::endl;
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
     }
 
     void _nop()
@@ -25,7 +33,7 @@ namespace core
     template <typename T>
     T newObject(size_t address)
     {
-        auto *ptr = new T(address);
+        T ptr(address);
         return ptr;
     }
 } // namespace core

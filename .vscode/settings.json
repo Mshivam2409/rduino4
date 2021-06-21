@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.m": "matlab",
+        "*.conf": "nginx",
+        "*.html": "html",
+        "random": "cpp"
+    }
+}
