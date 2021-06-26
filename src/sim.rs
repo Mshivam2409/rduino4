@@ -6,13 +6,10 @@ pub enum Clock {
 }
 
 #[repr(C, packed)]
-pub struct Sim {
-    // Complete code here
-    // See section 12.2 of the teensy manual for the register sizes and memory locations and do similar to the watchdog struct.
-    // Note that there are some empty bits between some registers and they are not continous, how do we resolve that ? Padding, eh ?
-    sopt1: u32,
+pub struct Sim { // to understand read section 12.2 of teensy manual 
+    sopt1: u32,// registers for sim 
     sopt1_cfg: u32,
-    _pad0: [u32; 1023],
+    _pad0: [u32; 1023],// we had to introduce padding as the registers are not contigous in memory use _padi to introduce padding to skip memory blocks in between the registers for Sim
     sopt2: u32,
     _pad1: u32,
     sopt4: u32,
@@ -38,7 +35,7 @@ pub struct Sim {
 
 impl Sim {
     pub unsafe fn new() -> &'static mut Sim {
-        // Complete code here (similar to watchdog), see memory location from section 12.2
+        // first register address of the register in Sim to start giving address in the Sim struct
         &mut *(0x40047000 as *mut Sim)
     }
 
@@ -46,10 +43,9 @@ impl Sim {
         unsafe {
             match clock {
                 Clock::PortC => {
-                    // Use the teensy manual to find out which register controls Port C. Then implement this function to enable port C. Scroll through section 12.2 to find which bit of which register needs to be changed to enable clock gate to Port C. Note that all other bits of that register must remain unchanged.
-                    let mut scgc = core::ptr::read_volatile(&self.scgc5);
-                    scgc |= 0x00000800;
-                    core::ptr::write_volatile(&mut self.scgc5, scgc);
+                    let mut scgc = core::ptr::read_volatile(&self.scgc5);//Read value at the "System Clock Gating Control Register 5" to make changes to enable Watch clock for Port C see 12.2 from manual
+                    scgc |= 0x00000800;//make value at the 12th bit to 1 to enable the watch clock for Port C at scgc_5.... to check read 12.2 teensy manual 
+                    core::ptr::write_volatile(&mut self.scgc5, scgc);//write value at "system Clock Gating Control Register 5" to finally enable the watch clock
                 }
             }
         }

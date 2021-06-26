@@ -3,7 +3,7 @@ use core::arch::arm::__nop;
 
 #[repr(C, packed)]
 pub struct Watchdog {
-    stctrlh: u16,
+    stctrlh: u16,//12 registers for Wacthdog controlling
     stctrll: u16,
     tovalh: u16,
     tovall: u16,
@@ -19,22 +19,18 @@ pub struct Watchdog {
 
 impl Watchdog {
     pub unsafe fn new() -> &'static mut Watchdog {
-        // You can see the starting address in section 23.7 of the manual i.e. 4005_2000.
-        &mut *(0x40052000 as *mut Watchdog)
+        &mut *(0x40052000 as *mut Watchdog)//starting register of watchdog
     }
 
     pub fn disable(&mut self) {
         unsafe {
-            // Disable the watchdog. This has 2 parts, unlocking the watchdog for modification and then disabling the watchdog.
-            // See section 23.3.1 for unlocking the watchdog. Ignore point 3 there.
-            // To disable the watchdog, see section 23.7.1 and scroll down to the last item in the table the 0th bit to understand how to disable the watchdog. This makes it clear that your operation should only change the 0th bit in the 16-bit value, keeping others same. How would you do that? (Think XOR,AND,OR etc.)
             core::ptr::write_volatile(&mut self.unlock, 0xC520);
-            core::ptr::write_volatile(&mut self.unlock, 0xD928);
+            core::ptr::write_volatile(&mut self.unlock, 0xD928);//unlocking the watchdog by writing values for unlock registers can check secction 23.3.1
             __nop();
-            __nop();
-            let mut ctrl = core::ptr::read_volatile(&self.stctrlh);
-            ctrl &= !(0x00000001);
-            core::ptr::write_volatile(&mut self.stctrlh, ctrl);
+            __nop();//waiting for watchdog to unlock takes two cycle delay
+            let mut ctrl = core::ptr::read_volatile(&self.stctrlh);//take value of stctrlh to disable watchdog see section 23.7.1 
+            ctrl &= !(0x00000001);//making 0th bit to 0 of WDOG_STCTRLH to disable Watch dog
+            core::ptr::write_volatile(&mut self.stctrlh, ctrl);//write the ctrl value to finally disable watchdog
         }
     }
 }
